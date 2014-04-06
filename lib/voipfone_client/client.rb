@@ -8,7 +8,7 @@ module VoipfoneClient
 		# 	password::
 		# 		A string for the password you log into Voipfone with
 		# == Returns::
-		# 	A `VoipfoneClient` object.
+		# 	A `VoipfoneClient::Client` object.
 		#
 		def initialize(username: nil, password: nil)
 			if username.nil? || password.nil?
@@ -23,7 +23,26 @@ module VoipfoneClient
 
 		def account_balance
 			request = @browser.get("https://www.voipfone.co.uk/api/srv?balance&builder")
-			JSON.parse(request.body)
+			parse_response(request)["balance"]
+		end
+
+		private
+		# Responses from the private Voipfone API are always in the form ["message", {content}]
+
+		# We will strip the message (hopefully "OK"), raise if not OK, and return the content.
+
+		# == Parameters::
+		# 	request::
+		# 		The raw request response from the Voipfone API
+		# == Returns::
+		# 	A Ruby hash of parsed JSON
+		# 
+		def parse_response(request)
+			raw = JSON.parse(request.body)
+			unless raw.first == "ok" || raw.first == "OK"
+				raise VoipfoneAPIError, raw.first
+			end
+			raw.last
 		end
 	end
 end
