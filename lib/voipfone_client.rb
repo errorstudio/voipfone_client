@@ -1,20 +1,8 @@
-require "voipfone_client/version"
+require 'json'
+require 'mechanize'
+require 'voipfone_client/client'
+require 'voipfone_client/errors'
 
 module VoipfoneClient
-  class << self
-    attr_accessor :configuration
-  end
-
-  def self.configure
-    self.configuration ||= Configuration.new
-    yield(configuration)
-  end
-
-  class Configuration
-    attr_accessor :username, :password
-
-    def initialize
-    	
-    end
-  end
+  
 end
