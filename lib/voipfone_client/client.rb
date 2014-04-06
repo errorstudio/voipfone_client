@@ -17,20 +17,32 @@ module VoipfoneClient
 				password = self.configuration.password
 			end
 			@browser = Mechanize.new
-			login_url = "https://www.voipfone.co.uk/login.php?method=process"
+			login_url = "#{VoipfoneClient::BASE_URL}/login.php?method=process"
 			@browser.post(login_url,{"hash" => "urlHash", "login" => username, "password" => password})
 		end
 
+		# Return the balance of the account as a float.
+		# == Returns::
+		# 	Balance as a float. Should be rounded to 2dp before presentation.			
 		def account_balance
-			request = @browser.get("https://www.voipfone.co.uk/api/srv?balance&builder")
+			request = @browser.get("#{VoipfoneClient::API_URL}?balance&builder")
 			parse_response(request)["balance"]
 		end
 
+		# Return the basic account details, as stored by Voipfone.
+		# == Returns::
+		# 	A hash of account details.
+		def account_details
+			request = @browser.get("#{VoipfoneClient::API_URL}?account")
+			parse_response(request)
+		end
+
+
+
+
 		private
 		# Responses from the private Voipfone API are always in the form ["message", {content}]
-
 		# We will strip the message (hopefully "OK"), raise if not OK, and return the content.
-
 		# == Parameters::
 		# 	request::
 		# 		The raw request response from the Voipfone API
