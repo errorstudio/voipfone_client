@@ -1,16 +1,6 @@
 class VoipfoneClient::Client
-	#  Intantiates a new Voipfone client, with optional username and password.
-	#  If no username / password is supplied here, one is expected in the configuration block.
-	# == Parameters:
-	# 	username::
-	# 		A string for the email you log into Voipfone with
-	#
-	# 	password::
-	# 		A string for the password you log into Voipfone with
-	#
-	# == Returns:
-	# 	A `VoipfoneClient::Client` object.
-	#
+	#  Intantiates a new Voipfone client, with username and password from the `VoipfoneClient::Configuration` class
+	# @return [VoipfoneClient::Client] the object created
 	def initialize()
 		if VoipfoneClient.configuration.username.nil? || VoipfoneClient.configuration.password.nil?
 			raise LoginCredentialsMissing, "You need to include a username and password to log in."
@@ -25,13 +15,8 @@ class VoipfoneClient::Client
 	private
 	# Responses from the private Voipfone API are always in the form ["message", {content}]
 	# We will strip the message (hopefully "OK"), raise if not OK, and return the content.
-	# == Parameters:
-	# 	request::
-	# 		The raw request response from the Voipfone API
-	#
-	# == Returns:
-	# 	A Ruby hash of parsed JSON
-	# 
+	# @param request [JSON] The raw request response from the Voipfone API
+	# @return [Hash] the parsed JSON
 	def parse_response(request)
 		raw = JSON.parse(request.body)
 		unless raw.first == "ok" || raw.first == "OK"

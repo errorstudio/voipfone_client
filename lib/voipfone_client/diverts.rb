@@ -1,7 +1,6 @@
 class VoipfoneClient::Client
   # Get a list of phones which can be diverted to. Returns a nested array of name and phone number.
-  # == Returns:
-  #   Nested array of names and phone numbers
+  # @return [Array] of names and phone numbers 
   def diverts_list
     request = @browser.get("#{VoipfoneClient::API_GET_URL}?divertsCommon")
     parse_response(request)["divertsCommon"]
@@ -10,15 +9,9 @@ class VoipfoneClient::Client
   # Add a new number to the list of numbers which can be diverted to. Requires a name
   # and a phone number, which will have spaces stripped from it. May be in international
   # format.
-  # == Parameters: 
-  #   Name::
-  #     String, the name which appears in dropdowns in the web interface
-  #
-  #   Number::
-  #     The number which will be called. Spaces will be stripped. + symbol accepted
-  # ==  
-  #   true on success, or a failure message (in which case a `VoipfoneAPIError`
-  #     will be raised)
+  # @param name [String] The name which appears in dropdowns in the web interface
+  # @param number [String] The number which will be called. Spaces will be stripped. + symbol accepted
+  # @return [Boolean] true on success or a failure message (in which case a `VoipfoneAPIError` will be raised)
   def add_to_diverts_list(name: nil, number: nil)
     if name.nil? || number.nil?
       raise ArgumentError, "You need to include a name and number to add to the diverts list"
@@ -44,24 +37,12 @@ class VoipfoneClient::Client
   #  - when there is a failure in the phone system
   #  - when the phone(s) are busy
   #  - when there's no answer
-
   # At least one option is required
-
-  # == Parameters:
-  #   All::
-  #     String, the number to which all calls will be diverted.
-  #
-  #   Fail::
-  #     String, the number to which calls will be diverted in the event of a failure
-  #
-  #   Busy::
-  #     String, the number to which calls will be diverted if the phones are busy
-  #
-  #   No Answer::
-  #     String, the number to which calls will be diverted if there's no answer
-  # 
-  # == Returns:
-  #   true on success, or a failure message (in which case a `VoipfoneAPIError` will be raised)
+  # @param all [String] The number to which all calls will be diverted.
+  # @param fail [String] The number to which calls will be diverted in the event of a failure
+  # @param busy [String] The number to which calls will be diverted if the phones are busy
+  # @param no_answer [String] The number to which calls will be diverted if there's no answer
+  # @return [Boolean] true on success, or a failure message (in which case a `VoipfoneAPIError` will be raised)
   def set_diverts(all: nil, fail: nil, busy: nil, no_answer: nil)
     all ||= ""
     fail ||= ""
@@ -83,20 +64,14 @@ class VoipfoneClient::Client
   end
 
   # Diverts all calls to the number passed into this method
-
-  # == Parameters:
-  #   Number::
-  #     String, the number to be diverted to.
-  #
-  # == Returns:
-  #   true on success, or an error message (in which case a `VoipfoneAPIError` will be raised)
+  # @param number [String] The number to be diverted to.
+  # @return [Boolean] true on success, or an error message (in which case a `VoipfoneAPIError` will be raised)
   def divert_all_calls(number: nil)
     set_diverts(all: number)
   end
 
   # Get current diverts
-  # == Returns:
-  #   A nested set of arrays with divert information for each type of divert currently set
+  # @return [Array] A nested set of arrays with divert information for each type of divert currently set
   def get_diverts
     request = @browser.get("#{VoipfoneClient::API_GET_URL}?divertsMain")
     parse_response(request)["divertsMain"]
