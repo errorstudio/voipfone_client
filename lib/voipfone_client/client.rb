@@ -11,12 +11,12 @@ class VoipfoneClient::Client
 	# == Returns:
 	# 	A `VoipfoneClient::Client` object.
 	#
-	def initialize(username: nil, password: nil)
-		if username.nil? || password.nil?
+	def initialize()
+		if VoipfoneClient.configuration.username.nil? || VoipfoneClient.configuration.password.nil?
 			raise LoginCredentialsMissing, "You need to include a username and password to log in."
-			username = self.configuration.username
-			password = self.configuration.password
 		end
+		username = VoipfoneClient.configuration.username
+		password = VoipfoneClient.configuration.password
 		@browser = Mechanize.new
 		login_url = "#{VoipfoneClient::BASE_URL}/login.php?method=process"
 		@browser.post(login_url,{"hash" => "urlHash", "login" => username, "password" => password})
