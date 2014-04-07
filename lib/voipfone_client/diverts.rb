@@ -1,6 +1,6 @@
 class VoipfoneClient::Client
   # Get a list of phones which can be diverted to. Returns a nested array of name and phone number.
-  # == Returns::
+  # == Returns:
   #   Nested array of names and phone numbers
   def diverts_list
     request = @browser.get("#{VoipfoneClient::API_GET_URL}?divertsCommon")
@@ -10,12 +10,13 @@ class VoipfoneClient::Client
   # Add a new number to the list of numbers which can be diverted to. Requires a name
   # and a phone number, which will have spaces stripped from it. May be in international
   # format.
-  # == Parameters:: 
+  # == Parameters: 
   #   Name::
   #     String, the name which appears in dropdowns in the web interface
+  #
   #   Number::
   #     The number which will be called. Spaces will be stripped. + symbol accepted
-  # == Returns::
+  # ==  
   #   true on success, or a failure message (in which case a `VoipfoneAPIError`
   #     will be raised)
   def add_to_diverts_list(name: nil, number: nil)
@@ -46,17 +47,20 @@ class VoipfoneClient::Client
 
   # At least one option is required
 
-  # == Parameters::
+  # == Parameters:
   #   All::
   #     String, the number to which all calls will be diverted.
+  #
   #   Fail::
   #     String, the number to which calls will be diverted in the event of a failure
+  #
   #   Busy::
   #     String, the number to which calls will be diverted if the phones are busy
+  #
   #   No Answer::
   #     String, the number to which calls will be diverted if there's no answer
   # 
-  # == Returns::
+  # == Returns:
   #   true on success, or a failure message (in which case a `VoipfoneAPIError` will be raised)
   def set_diverts(all: nil, fail: nil, busy: nil, no_answer: nil)
     all ||= ""
@@ -80,17 +84,18 @@ class VoipfoneClient::Client
 
   # Diverts all calls to the number passed into this method
 
-  # == Parameters::
+  # == Parameters:
   #   Number::
   #     String, the number to be diverted to.
-  # == Returns::
+  #
+  # == Returns:
   #   true on success, or an error message (in which case a `VoipfoneAPIError` will be raised)
   def divert_all_calls(number: nil)
     set_diverts(all: number)
   end
 
   # Get current diverts
-  # == Returns::
+  # == Returns:
   #   A nested set of arrays with divert information for each type of divert currently set
   def get_diverts
     request = @browser.get("#{VoipfoneClient::API_GET_URL}?divertsMain")

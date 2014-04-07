@@ -1,12 +1,14 @@
 class VoipfoneClient::Client
 	#  Intantiates a new Voipfone client, with optional username and password.
 	#  If no username / password is supplied here, one is expected in the configuration block.
-	# == Parameters::
+	# == Parameters:
 	# 	username::
 	# 		A string for the email you log into Voipfone with
+	#
 	# 	password::
 	# 		A string for the password you log into Voipfone with
-	# == Returns::
+	#
+	# == Returns:
 	# 	A `VoipfoneClient::Client` object.
 	#
 	def initialize(username: nil, password: nil)
@@ -23,10 +25,11 @@ class VoipfoneClient::Client
 	private
 	# Responses from the private Voipfone API are always in the form ["message", {content}]
 	# We will strip the message (hopefully "OK"), raise if not OK, and return the content.
-	# == Parameters::
+	# == Parameters:
 	# 	request::
 	# 		The raw request response from the Voipfone API
-	# == Returns::
+	#
+	# == Returns:
 	# 	A Ruby hash of parsed JSON
 	# 
 	def parse_response(request)
