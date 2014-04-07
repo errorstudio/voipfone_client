@@ -16,6 +16,25 @@ And then execute:
 
     $ bundle
 
+##Configuration and Use
+
+Before you can instantiate a `VoipfoneClient::Client` object, you need to need to configure it:
+
+```ruby
+VoipfoneClient.configure do |config|
+	config.username = "your@email.address"
+	config.password = "yourpass"
+end
+```
+
+This approach gives us lots of options for adding more config options in the future.
+
+After that you can create a new object to call Voipfone:
+
+```ruby
+c = VoipfoneClient::Client.new
+c.account_balance #will return your balance as a float
+```
 
 ## Contributing
 
