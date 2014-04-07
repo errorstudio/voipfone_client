@@ -10,7 +10,7 @@ Gem::Specification.new do |spec|
   spec.email         = ["ed@errorstudio.co.uk"]
   spec.summary       = %q{A client for voipfone.co.uk, a UK-based SIP provider}
   spec.description   = %q{Voipfone are a brilliant SIP provider with loads of features, but no API. This Gem hooks into the API which their web interfaces uses.}
-  spec.homepage      = ""
+  spec.homepage      = "https://github.com/errorstudio/voipfone_client"
   spec.license       = "MIT"
 
   spec.files         = `git ls-files -z`.split("\x0")
