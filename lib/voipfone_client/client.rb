@@ -1,4 +1,5 @@
 class VoipfoneClient::Client
+	attr_reader :browser
 	#  Intantiates a new Voipfone client, with username and password from the `VoipfoneClient::Configuration` class
 	# @return [VoipfoneClient::Client] the object created
 	def initialize()
@@ -10,6 +11,11 @@ class VoipfoneClient::Client
 		@browser = Mechanize.new
 		login_url = "#{VoipfoneClient::BASE_URL}/login.php?method=process"
 		@browser.post(login_url,{"hash" => "urlHash", "login" => username, "password" => password})
+		#We'll do a call to a cheap endpoint (the balance) and if it returns 'authfirst', there's a problem
+		#with the username / password. Oddly it still returns 200 OK.
+		if account_balance == "authfirst"
+			raise NotAuthenticatedError, "Username or Password weren't accepted. You'll need to instantiate a new VoipfoneClient::Client object."
+		end
 	end
 
 	private
