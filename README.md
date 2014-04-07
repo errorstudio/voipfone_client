@@ -6,15 +6,17 @@ Voipfone is a brilliant SIP VOIP provider with a very neat set of features, but 
 
 ## Installation
 
-At the moment this gem isn't published in Rubygems. So you'll need to add it directly from github:
+This gem is in Rubygems, so you can add this line to your application's Gemfile:
 
-Add this line to your application's Gemfile:
-
-    gem 'voipfone_client', git: "http://github.com/errorstudio/voipfone_client.git"
+    gem 'voipfone_client'
 
 And then execute:
 
     $ bundle
+
+Or you can manually install the gem using:
+
+	gem install voipfone_client
 
 ##Configuration and Use
 
