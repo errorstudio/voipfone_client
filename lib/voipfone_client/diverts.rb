@@ -31,12 +31,13 @@ class VoipfoneClient::Client
   end
 
 
-  # Divert calls for different circumstances - at least one option is required. There are 4 supported situations which can be
+  # Divert calls for different circumstances. There are 4 supported situations which can be
   # diverted for, namely:
   #  - all calls (i.e. no calls will reach the pbx / phones - immediate divert)
   #  - when there is a failure in the phone system
   #  - when the phone(s) are busy
   #  - when there's no answer
+  # If no values are passed, all diverts are cleared.
   # @param all [String] The number to which all calls will be diverted.
   # @param fail [String] The number to which calls will be diverted in the event of a failure
   # @param busy [String] The number to which calls will be diverted if the phones are busy
