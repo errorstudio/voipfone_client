@@ -6,6 +6,7 @@ require 'voipfone_client/account_balance'
 require 'voipfone_client/account_details'
 require 'voipfone_client/diverts'
 require 'voipfone_client/voicemail'
+require 'voipfone_client/sms'
 
 module VoipfoneClient
   BASE_URL = "https://www.voipfone.co.uk"
