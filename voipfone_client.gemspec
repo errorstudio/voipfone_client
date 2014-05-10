@@ -23,4 +23,5 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "yard", "~> 0.8"
 
   spec.add_dependency "mechanize", "~> 2.7"
+  spec.add_dependency "require_all", "~> 1.3"
 end
