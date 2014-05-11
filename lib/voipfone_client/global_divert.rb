@@ -10,6 +10,16 @@ module VoipfoneClient
   class GlobalDivert < Client
     attr_accessor :type, :number
 
+    # Constructor for `GlobalDivert` which allows you to pass in a `DivertListItem` to be used as the receiving number.
+    # @param divert_list_item [DivertListItem] a `DivertListItem` object which will be used to fill the `GlobalDivert` number.
+    # You still need to specify the divert type.
+    def initialize(divert_list_item = nil)
+      if divert_list_item.is_a?(DivertListItem)
+        @number = divert_list_item.number
+      end
+      super()
+    end
+
     # A hash of voipfone divert names vs our divert names. Note that when we query
     # voipfone the returned value of the divert type is UPPERCASE.
     VOIPFONE_DIVERT_NAMES = {
