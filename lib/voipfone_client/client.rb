@@ -19,7 +19,6 @@ module VoipfoneClient
 			end
 		end
 
-		private
 		# Responses from the private Voipfone API are always in the form ["message", {content}]
 		# We will strip the message (hopefully "OK"), raise if not OK, and return the content.
 		# @param request [JSON] The raw request response from the Voipfone API
