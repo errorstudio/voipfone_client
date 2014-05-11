@@ -8,21 +8,44 @@ module VoipfoneClient
   #  - when the phone(s) are busy
   #  - when there's no answer
   class GlobalDivert < Client
-    attr_accessor :divert_type, :divert_number
+    attr_accessor :type, :number
+
+    # A hash of voipfone divert names vs our divert names. Note that when we query
+    # voipfone the returned value of the divert type is UPPERCASE.
+    VOIPFONE_DIVERT_NAMES = {
+      "all" => "all",
+      "chanunavail" => "fail",
+      "busy" => "busy",
+      "noanswer" => "no_answer"
+    }
 
     #Save the divert on your account
     # @return [Boolean] true on success, or a failure message (in which case a `VoipfoneAPIError` will be raised)
     def save
-      if @divert_type.nil? || @divert_number.nil?
+      if @type.nil? || @number.nil?
         raise ArgumentError, "You need to set a divert type and divert number before you can save the divert."
       end
-      set_diverts(@divert_type => @divert_number)
+      set_diverts(@type => @number)
     end
 
     #Clear all diverts
     # @return [Boolean] true on success, or a failure message (in which case a `VoipfoneAPIError` will be raised)
     def clear!
       set_diverts()
+    end
+    class << self
+      # Get current diverts
+      # @return [Array] A nested set of arrays with divert information for each type of divert currently set
+      def all
+        g = self.new
+        request = g.browser.get("#{VoipfoneClient::API_GET_URL}?divertsMain")
+        g.parse_response(request)["divertsMain"].collect do |d|
+          divert = GlobalDivert.new
+          divert.number = d[1]
+          divert.type = VOIPFONE_DIVERT_NAMES[d[2].downcase].to_sym
+          divert
+        end
+      end
     end
 
     private
@@ -57,18 +80,6 @@ module VoipfoneClient
         raise VoipfoneAPIError, response.first
       end
     end
-
-    class << self
-      # Get current diverts
-      # @return [Array] A nested set of arrays with divert information for each type of divert currently set
-      def all
-        g = self.new
-        request = g.browser.get("#{VoipfoneClient::API_GET_URL}?divertsMain")
-        g.parse_response(request)["divertsMain"]
-      end
-    end
-
-
   end
 end
 
