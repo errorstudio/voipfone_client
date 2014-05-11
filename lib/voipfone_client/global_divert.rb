@@ -62,8 +62,9 @@ module VoipfoneClient
       # Get current diverts
       # @return [Array] A nested set of arrays with divert information for each type of divert currently set
       def all
-        request = @browser.get("#{VoipfoneClient::API_GET_URL}?divertsMain")
-        parse_response(request)["divertsMain"]
+        g = self.new
+        request = g.browser.get("#{VoipfoneClient::API_GET_URL}?divertsMain")
+        g.parse_response(request)["divertsMain"]
       end
     end
 
