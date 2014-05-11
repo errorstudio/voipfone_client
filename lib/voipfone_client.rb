@@ -1,7 +1,7 @@
 require 'json'
 require 'mechanize'
 require 'require_all'
-require_all 'lib/voipfone_client'
+require_rel 'voipfone_client'
 
 module VoipfoneClient
   BASE_URL = "https://www.voipfone.co.uk"
