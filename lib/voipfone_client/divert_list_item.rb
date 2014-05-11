@@ -1,13 +1,14 @@
 module VoipfoneClient
   class DivertListItem < Client
+    attr_accessor :name, :number
 
-    #initialise a [DivertListItem], with a name [String] and number [String].
-    # @param name [String] The name which appears in dropdowns in the web interface
-    # @param number [String] The number which will be called. Spaces will be stripped. + symbol accepted
+    # Constructor for `DivertListItem` which accepts the name and number of the phone number to add to the diverts list.
+    # @param name [String] the name of the phone to be diverted to
+    # @param number [String] the number of the phone to be diverted to.
     def initialize(name: nil, number: nil)
-      super!
       @name = name
       @number = number
+      super()
     end
 
     # Add a new number to the list of numbers which can be diverted to. Requires a name
@@ -36,8 +37,11 @@ module VoipfoneClient
       # Get a list of phones which can be diverted to. Returns a nested array of name and phone number.
       # @return [Array] of names and phone numbers 
       def all
-        request = @browser.get("#{VoipfoneClient::API_GET_URL}?divertsCommon")
-        parse_response(request)["divertsCommon"]
+        d = self.new
+        request = d.browser.get("#{VoipfoneClient::API_GET_URL}?divertsCommon")
+        d.parse_response(request)["divertsCommon"].collect do |i|
+          DivertListItem.new(name: i.first, number: i.last)
+        end
       end
     end
   end
