@@ -74,6 +74,8 @@ s.from = "[sender number]" # a number which is in the list of registered mobiles
 s.to = "[recipient number]" #your recipient number
 s.message = "your message" #message is truncated at 160 chars; UTF-8 not supported.
 
+```
+
 Spaces are stripped from phone numbers (which need to be supplied as a string); international format with a + symbol is OK.
 
 ### Voipfone::GlobalDivert
