@@ -45,7 +45,7 @@ module VoipfoneClient
     end
     class << self
       # Get current diverts
-      # @return [Array] A nested set of arrays with divert information for each type of divert currently set
+      # @return [Array] An array of {GlobalDivert} objects with divert information for each type of divert currently set
       def all
         g = self.new
         request = g.browser.get("#{VoipfoneClient::API_GET_URL}?divertsMain")
@@ -55,6 +55,13 @@ module VoipfoneClient
           divert.type = VOIPFONE_DIVERT_NAMES[d[2].downcase].to_sym
           divert
         end
+      end
+
+      # Clear all diverts - this is a class method
+    # @return [Boolean] true on success, or a failure message (in which case a {VoipfoneAPIError} will be raised)
+      def clear!
+        g = self.new
+        g.clear!
       end
     end
 
