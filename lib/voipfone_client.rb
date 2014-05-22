@@ -5,8 +5,9 @@ require_rel 'voipfone_client'
 
 module VoipfoneClient
   BASE_URL = "https://www.voipfone.co.uk"
-  API_GET_URL = "https://www.voipfone.co.uk/api/srv"
-  API_POST_URL = "https://www.voipfone.co.uk/api/upd"
+  API_GET_URL = "#{BASE_URL}/api/srv"
+  API_POST_URL = "#{BASE_URL}/api/upd"
+  TMP_FOLDER = File.join(File.dirname(__FILE__),"..","/tmp")
 
   class << self
     attr_accessor :configuration
@@ -21,10 +22,15 @@ module VoipfoneClient
 
   # A configuration class which contains the attributes we want to set in the module method
   class Configuration
-    attr_accessor :username, :password, :user_agent_string
+    attr_accessor :username, :password, :user_agent_string, :cache_cookies
 
+    # Configuration initializer, to set up default configuration options
     def initialize
+      # By default we cache cookies to a file
+      @cache_cookies = true
 
+      # By default we set the user agent string to "VoipfoneClient/[version] http://github.com/errorstudio/voipfone_client"
+      @user_agent_string = "VoipfoneClient/#{VoipfoneClient::VERSION} (http://github.com/errorstudio/voipfone_client)"
     end
   end
 end
