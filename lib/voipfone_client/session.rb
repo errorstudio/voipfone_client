@@ -34,7 +34,7 @@ module VoipfoneClient
     def login
       username = VoipfoneClient.configuration.username
       password = VoipfoneClient.configuration.password
-      cookie_file = File.join(VoipfoneClient::TMP_FOLDER,"cookies")
+      cookie_file = File.join(VoipfoneClient::TMP_FOLDER,"voipfone_client_cookies.yaml")
 
       # load existing cookies from the file on disk
       if File.exists?(cookie_file)

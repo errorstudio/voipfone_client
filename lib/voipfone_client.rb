@@ -1,13 +1,14 @@
 require 'json'
 require 'mechanize'
 require 'require_all'
+require 'tmpdir'
 require_rel 'voipfone_client'
 
 module VoipfoneClient
   BASE_URL = "https://www.voipfone.co.uk"
   API_GET_URL = "#{BASE_URL}/api/srv"
   API_POST_URL = "#{BASE_URL}/api/upd"
-  TMP_FOLDER = File.join(File.dirname(__FILE__),"..","/tmp")
+  TMP_FOLDER = Dir.tmpdir
 
   class << self
     attr_accessor :configuration
