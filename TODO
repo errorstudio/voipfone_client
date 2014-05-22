@@ -1,6 +1,0 @@
- - move login functionality into VoipfoneSession base class which all others inherit from
- - mechanize picks up local cookie jar if it exists (and overwrites if it needs to log in)
- - everything subclasses VoipfoneSession (including things like Account which have balance, account_details etc)
- - remove monkey patching - no need for it, if we can subclass everything
-
- 
