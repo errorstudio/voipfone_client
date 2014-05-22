@@ -1,5 +1,5 @@
 module VoipfoneClient
-  class SMS < Client
+  class SMS < Session
     attr_accessor :from, :to, :message
 
     # Constructor to create an SMS - optionally pass in to, from and message

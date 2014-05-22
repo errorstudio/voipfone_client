@@ -1,5 +1,5 @@
 module VoipfoneClient
-	class RegisteredMobile < Client
+	class RegisteredMobile < Session
     attr_accessor :number, :name
 
     class << self
