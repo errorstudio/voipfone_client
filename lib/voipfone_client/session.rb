@@ -3,12 +3,13 @@ module VoipfoneClient
     attr_reader :browser
     # Intantiates a new Voipfone client, with username and password from the [VoipfoneClient::Configuration] class
     # @return [VoipfoneClient::Client] the object created
-    def initialize()
+    def initialize
       if VoipfoneClient.configuration.username.nil? || VoipfoneClient.configuration.password.nil?
         raise LoginCredentialsMissing, "You need to include a username and password to log in."
       end
       @browser = Mechanize.new
-      login unless authenticated?
+      @browser.user_agent = VoipfoneClient.configuration.user_agent_string
+      login()
     end
 
     # check if the user is authenticated. This is a little convoluted because the voipfone private API
@@ -28,21 +29,31 @@ module VoipfoneClient
     # login to Voipfone, using the configured username and password. 
     # Unless explicitly specified, this method caches cookies on disk to
     # allow classes inheriting {Voipfone::Session} to use these instead of
-    # logging in each time. If you really (really) want to log in each time,
-    # set VoipfoneClient.configuration.cache_cookies to false
+    # logging in each time.
+    # @return [Boolean] true on success or {NotAuthenticatedError} on failure
     def login
       username = VoipfoneClient.configuration.username
       password = VoipfoneClient.configuration.password
       cookie_file = File.join(VoipfoneClient::TMP_FOLDER,"cookies")
-      if File.exists?(cookie_file) && VoipfoneClient.configuration.cache_cookies != false
+
+      # load existing cookies from the file on disk
+      if File.exists?(cookie_file)
         @browser.cookie_jar.load(cookie_file)
       end
-      #login to the service
+
+      # if we're authenticated at this point, we're done.
+      return true if authenticated?
+
+      # …otherwise we need to login to the service
       login_url = "#{VoipfoneClient::BASE_URL}/login.php?method=process"
       @browser.post(login_url,{"hash" => "urlHash", "login" => username, "password" => password})
+
+      # If we're authenticated at this point, save the cookies and return true
       if authenticated?
-            
-        
+        @browser.cookie_jar.save(cookie_file, session: true)
+        return true
+      # otherwise, we've tried to authenticate and failed, which means we have a 
+      # bad username / password combo and it's time to raise an error.
       else
         raise NotAuthenticatedError, "Username or Password weren't accepted."
       end
