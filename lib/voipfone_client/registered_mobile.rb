@@ -1,5 +1,5 @@
 module VoipfoneClient
-	class RegisteredMobile < Session
+  class RegisteredMobile < Session
     attr_accessor :number, :name
 
     class << self
@@ -14,5 +14,5 @@ module VoipfoneClient
         end
       end
     end
-	end
+  end
 end

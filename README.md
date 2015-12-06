@@ -40,15 +40,15 @@ This approach gives us lots of options for adding more config options in the fut
 After you've done that, there are various classes which you can use to access different parts of your Voipfone Account.
 
 ### VoipfoneClient::Account
-The `Voipfone::Account` class has methods relating to your account:
+The `VoipfoneClient::Account` class has methods relating to your account:
 
 * `balance()` returns your balance as a float
 * `details` returns a hash of your account details (email, name etc)
 * `phone numbers()` returns an array of phone numbers associated with your account
 * `voicemail()` gives you a list of your voicemails, but not (yet) the audio. Pull requests welcome!
 
-### Voipfone::RegisteredMobile
-The `Voipfone::RegisteredMobile` class only has one class method at the moment, `Voipfone::RegisteredMobile.all()` which returns an array of `Voipfone::RegisteredMobile` objects. These respond to `number()` and `name()`.
+### VoipfoneClient::RegisteredMobile
+The `VoipfoneClient::RegisteredMobile` class only has one class method at the moment, `VoipfoneClient::RegisteredMobile.all()` which returns an array of `VoipfoneClient::RegisteredMobile` objects. These respond to `number()` and `name()`.
 
 These are particularly useful to know for sending SMS messages, because the 'from' number has to be in this list. You can't send an SMS from an arbitrary number.
 
@@ -62,8 +62,8 @@ m.number #this will be the number of the mobile
 
 ```
 
-### Voipfone::SMS
-The `Voipfone::SMS` class allows you to send SMS messages from your account.
+### VoipfoneClient::SMS
+The `VoipfoneClient::SMS` class allows you to send SMS messages from your account.
 
 You need to make sure that you're sending _from_ a number which is in the list of registered mobiles.
 
@@ -78,8 +78,8 @@ s.message = "your message" #message is truncated at 160 chars; UTF-8 not support
 
 Spaces are stripped from phone numbers (which need to be supplied as a string); international format with a + symbol is OK.
 
-### Voipfone::GlobalDivert
-The `Voipfone::GlobalDivert` class handles diverts for your whole account (all extensions).
+### VoipfoneClient::GlobalDivert
+The `VoipfoneClient::GlobalDivert` class handles diverts for your whole account (all extensions).
 
 Diverts are one of four __types__ in Voipfone, which we describe thus:
 
