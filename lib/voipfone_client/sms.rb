@@ -25,7 +25,8 @@ module VoipfoneClient
         "sms-send-from" => from,
         "sms-message" => @message[0..159]
       }
-      request = @browser.post("#{VoipfoneClient::API_POST_URL}?smsSend", parameters)
+      request = @browser.post("#{VoipfoneClient::API_POST_URL}?smsSend",
+                              parameters)
       response = parse_response(request)
       if response == "ok"
         return true

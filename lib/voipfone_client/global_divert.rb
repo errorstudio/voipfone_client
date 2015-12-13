@@ -49,7 +49,7 @@ module VoipfoneClient
       def all
         g = self.new
         request = g.browser.get("#{VoipfoneClient::API_GET_URL}?divertsMain")
-        g.parse_response(request)["divertsMain"].collect do |d|
+        g.parse_response(request)[:divertsMain].collect do |d|
           divert = GlobalDivert.new
           divert.number = d[1]
           divert.type = VOIPFONE_DIVERT_NAMES[d[2].downcase].to_sym

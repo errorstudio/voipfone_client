@@ -40,46 +40,36 @@ This approach gives us lots of options for adding more config options in the fut
 After you've done that, there are various classes which you can use to access different parts of your Voipfone Account.
 
 ### VoipfoneClient::Account
-The `Voipfone::Account` class has methods relating to your account:
+The `VoipfoneClient::Account` class has methods relating to your account:
 
 * `balance()` returns your balance as a float
 * `details` returns a hash of your account details (email, name etc)
-* `phone numbers()` returns an array of phone numbers associated with your account
+* `extension_numbers()` returns an array of extension numbers associated with your account
+* `phone_numbers()` returns an array of phone numbers associated with your account
 * `voicemail()` gives you a list of your voicemails, but not (yet) the audio. Pull requests welcome!
-
-### Voipfone::RegisteredMobile
-The `Voipfone::RegisteredMobile` class only has one class method at the moment, `Voipfone::RegisteredMobile.all()` which returns an array of `Voipfone::RegisteredMobile` objects. These respond to `number()` and `name()`.
-
-These are particularly useful to know for sending SMS messages, because the 'from' number has to be in this list. You can't send an SMS from an arbitrary number.
 
 ```ruby
 
-include VoipfoneClient
-mobiles = RegisteredMobile.all #this will be an array
-m = mobiles.first
-m.name #this will be the name of the mobile
-m.number #this will be the number of the mobile
+account = VoipfoneClient::Account.new 
+account.balance   # => 123.4567890
 
 ```
 
-### Voipfone::SMS
-The `Voipfone::SMS` class allows you to send SMS messages from your account.
+### VoipfoneClient::Extension
+The `VoipfoneClient::Extension` class has methods relating to your extensions:
 
-You need to make sure that you're sending _from_ a number which is in the list of registered mobiles.
+* `all()` returns a collection of all extensions associated with your account
+* `list()` returns a simple list of the extension numbers associated with your account
 
-``` ruby
-include VoipfoneClient
-s = SMS.new
-s.from = "[sender number]" # a number which is in the list of registered mobiles at voipfone
-s.to = "[recipient number]" #your recipient number
-s.message = "your message" #message is truncated at 160 chars; UTF-8 not supported.
+
+```ruby
+
+VoipfoneClient::Extension.list # => ["200", "201", "202", "203", "204", "205", "206", ... ]
 
 ```
 
-Spaces are stripped from phone numbers (which need to be supplied as a string); international format with a + symbol is OK.
-
-### Voipfone::GlobalDivert
-The `Voipfone::GlobalDivert` class handles diverts for your whole account (all extensions).
+### VoipfoneClient::GlobalDivert
+The `VoipfoneClient::GlobalDivert` class handles diverts for your whole account (all extensions).
 
 Diverts are one of four __types__ in Voipfone, which we describe thus:
 
@@ -102,6 +92,82 @@ d.save # will return true on success
 
 ```
 In the Voipfone web interface you have to set up a list of divert recipients (and you can do that in this client too), but you don't _need_ to - you can set any number for a divert. As with all other numbers you set, it should be passed in as a string, spaces will be stripped, the + symbol is allowed.
+
+### VoipfoneClient::RegisteredMobile
+The `VoipfoneClient::RegisteredMobile` class only has one class method at the moment, `VoipfoneClient::RegisteredMobile.all()` which returns an array of `VoipfoneClient::RegisteredMobile` objects. These respond to `number()` and `name()`.
+
+These are particularly useful to know for sending SMS messages, because the 'from' number has to be in this list. You can't send an SMS from an arbitrary number.
+
+```ruby
+
+include VoipfoneClient
+mobiles = RegisteredMobile.all #this will be an array
+m = mobiles.first
+m.name #this will be the name of the mobile
+m.number #this will be the number of the mobile
+
+```
+
+### VoipfoneClient::Report
+The `VoipfoneClient::Report` class allows you to collect call report information for your account:
+
+* `call_records_summary( call_type, date, range, extension_filter)` returns
+  an an array of call summary data, namely duration, cost and number
+  of calls per hour or day (depending on chosen range, see below)
+
+* `call_records( call_type, date, range, extension_filter)` returns
+  an an array of call record hashes containing call details, namely date
+  and time, to, from, duration and cost
+
+`call_type` is one of three __types__ in Voipfone, which we describe thus:
+
+* `:outgoing` - for reporting on outgoing calls (this is the default)
+* `:incoming` - for reporting on incoming calls
+* `:missed` - for reporting on incoming calls that were not answered
+
+`date` is a standard Ruby Date class, defaulting to today if not set.
+
+`range` is either :month or :day, defaulting to :month
+
+`extension_filter` is either the extension to report on, or :all for all extensions.  This is also the default.
+
+
+``` ruby
+include VoipfoneClient
+r = VoipfoneClient::Report.call_records_summary( :missed, Date.today, :day, :all)
+# => [{:duration=>0, :pkgMins=>0, :cost=>0.0, :calls=>0, :hour=>0}, {:duration=>0, :pkgMins=>0, :cost=>0.0, :calls=>0, :hour=>1}, ...]
+
+
+```
+
+Note that missed calls can have a duration if the caller left a voicemail message.
+
+
+``` ruby
+include VoipfoneClient
+r = VoipfoneClient::Report.call_records( :outgoing, Date.today, :day, :all)
+# => [{:datetime=>#<DateTime: 2015-12-11T19:37:00+00:00 ((2457368j,70620s,0n),+0s,2299161j)>, :from=>"30163517*200", :to=>"004412341234", :duration=>4, :cost=>"0.0120", :package_minutes=>"0"}, ...] 
+
+```
+
+Note that a search across all extensions for a month can take a while to download all the records.
+
+
+### VoipfoneClient::SMS
+The `VoipfoneClient::SMS` class allows you to send SMS messages from your account.
+
+You need to make sure that you're sending _from_ a number which is in the list of registered mobiles.
+
+``` ruby
+include VoipfoneClient
+s = SMS.new
+s.from = "[sender number]" # a number which is in the list of registered mobiles at voipfone
+s.to = "[recipient number]" #your recipient number
+s.message = "your message" #message is truncated at 160 chars; UTF-8 not supported.
+
+```
+
+Spaces are stripped from phone numbers (which need to be supplied as a string); international format with a + symbol is OK.
 
 ##To Do
 
