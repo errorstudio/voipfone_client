@@ -1,3 +1,4 @@
+# coding: utf-8
 module VoipfoneClient
   class Session
     attr_reader :browser
@@ -18,7 +19,7 @@ module VoipfoneClient
     # @return [Boolean] to identify whether we're authenticated or not.
     def authenticated?
       request = @browser.get("#{VoipfoneClient::API_GET_URL}?builder")
-      response = parse_response(request)["builder"]
+      response = parse_response(request)[:builder]
       if response == "authfirst"
         return false
       else
@@ -61,10 +62,12 @@ module VoipfoneClient
 
     # Responses from the private Voipfone API are always in the form ["message", {content}]
     # We will strip the message (hopefully "OK"), raise if not OK, and return the content.
+    # One exception - call records do not follow this convention and therefore
+    # a different approach is used for these.
     # @param request [JSON] The raw request response from the Voipfone API
     # @return [Hash] the parsed JSON
     def parse_response(request)
-      raw = JSON.parse(request.body)
+      raw = JSON.parse(request.body, symbolize_names: true)
       unless raw.first == "ok" || raw.first == "OK"
         raise VoipfoneAPIError, raw.first
       end

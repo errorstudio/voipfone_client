@@ -39,7 +39,7 @@ module VoipfoneClient
       def all
         d = self.new
         request = d.browser.get("#{VoipfoneClient::API_GET_URL}?divertsCommon")
-        d.parse_response(request)["divertsCommon"].collect do |i|
+        d.parse_response(request)[:divertsCommon].collect do |i|
           DivertListItem.new(name: i.first, number: i.last)
         end
       end

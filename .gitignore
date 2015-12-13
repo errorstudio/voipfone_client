@@ -17,6 +17,7 @@ test/version_tmp
 tmp
 # Ignore emacs backups
 *~
+TAGS
 # Based on guidance found at: http://stackoverflow.com/questions/16087120/
 .ruby-version
 .ruby-gemset
